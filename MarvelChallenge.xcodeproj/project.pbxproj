@@ -7,16 +7,16 @@
 	objects = {
 
 /* Begin PBXFileReference section */
-		520DF51F2CD90D1C00272995 /* marvelChallenge.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = marvelChallenge.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		520DF51F2CD90D1C00272995 /* MarvelChallenge.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MarvelChallenge.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		520DF5342CD90D1E00272995 /* Exceptions for "marvelChallange" folder in "marvelChallenge" target */ = {
+		520DF5342CD90D1E00272995 /* Exceptions for "marvelChallange" folder in "MarvelChallenge" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
 			);
-			target = 520DF51E2CD90D1C00272995 /* marvelChallenge */;
+			target = 520DF51E2CD90D1C00272995 /* MarvelChallenge */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
@@ -24,7 +24,7 @@
 		520DF5212CD90D1C00272995 /* marvelChallange */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				520DF5342CD90D1E00272995 /* Exceptions for "marvelChallange" folder in "marvelChallenge" target */,
+				520DF5342CD90D1E00272995 /* Exceptions for "marvelChallange" folder in "MarvelChallenge" target */,
 			);
 			path = marvelChallange;
 			sourceTree = "<group>";
@@ -53,7 +53,7 @@
 		520DF5202CD90D1C00272995 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				520DF51F2CD90D1C00272995 /* marvelChallenge.app */,
+				520DF51F2CD90D1C00272995 /* MarvelChallenge.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -61,9 +61,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		520DF51E2CD90D1C00272995 /* marvelChallenge */ = {
+		520DF51E2CD90D1C00272995 /* MarvelChallenge */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 520DF5352CD90D1E00272995 /* Build configuration list for PBXNativeTarget "marvelChallenge" */;
+			buildConfigurationList = 520DF5352CD90D1E00272995 /* Build configuration list for PBXNativeTarget "MarvelChallenge" */;
 			buildPhases = (
 				520DF51B2CD90D1C00272995 /* Sources */,
 				520DF51C2CD90D1C00272995 /* Frameworks */,
@@ -76,11 +76,11 @@
 			fileSystemSynchronizedGroups = (
 				520DF5212CD90D1C00272995 /* marvelChallange */,
 			);
-			name = marvelChallenge;
+			name = MarvelChallenge;
 			packageProductDependencies = (
 			);
 			productName = marvelChallange;
-			productReference = 520DF51F2CD90D1C00272995 /* marvelChallenge.app */;
+			productReference = 520DF51F2CD90D1C00272995 /* MarvelChallenge.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -98,7 +98,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 520DF51A2CD90D1C00272995 /* Build configuration list for PBXProject "marvelChallenge" */;
+			buildConfigurationList = 520DF51A2CD90D1C00272995 /* Build configuration list for PBXProject "MarvelChallenge" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -112,7 +112,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				520DF51E2CD90D1C00272995 /* marvelChallenge */,
+				520DF51E2CD90D1C00272995 /* MarvelChallenge */,
 			);
 		};
 /* End PBXProject section */
@@ -312,7 +312,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		520DF51A2CD90D1C00272995 /* Build configuration list for PBXProject "marvelChallenge" */ = {
+		520DF51A2CD90D1C00272995 /* Build configuration list for PBXProject "MarvelChallenge" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				520DF5382CD90D1E00272995 /* Debug */,
@@ -321,7 +321,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		520DF5352CD90D1E00272995 /* Build configuration list for PBXNativeTarget "marvelChallenge" */ = {
+		520DF5352CD90D1E00272995 /* Build configuration list for PBXNativeTarget "MarvelChallenge" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				520DF5362CD90D1E00272995 /* Debug */,
