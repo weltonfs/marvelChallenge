@@ -1,6 +1,6 @@
 //
 //  SceneDelegate.swift
-//  marvelChallange
+//  marvelChallenge
 //
 //  Created by MacBook Pro on 04/11/24.
 //
@@ -18,11 +18,16 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         self.window = UIWindow(windowScene: windowScene)
         
         let navigationController = UINavigationController(rootViewController: ViewController())
-        
         self.window?.rootViewController = navigationController
+        
+//        let navigationController = UINavigationViewController()
+//        self.window?.rootViewController = navigationController
+//        let coordinator = MainCoordinator(navigationController: navigationController)
+//        coordinator.start()
+        
         self.window?.makeKeyAndVisible()
     }
-
+    
     func sceneDidDisconnect(_ scene: UIScene) {
         // Called as the scene is being released by the system.
         // This occurs shortly after the scene enters the background, or when its session is discarded.

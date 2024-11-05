@@ -23,7 +23,11 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        navigationItem.title = "Marvel Challenge"
+        initView()
+    }
+    
+    func initView() {
         mainScreen.setup(labelText: "Main Screen", buttonTitle: "Button Click")
     }
 }

@@ -60,7 +60,7 @@ class MainScreen: UIView {
 
 extension MainScreen: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        debugPrint("Select Row")
+        debugPrint(tableView.indexPathForSelectedRow ?? 0)
     }
 }
 

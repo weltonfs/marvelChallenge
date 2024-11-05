@@ -11,7 +11,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		520DF5342CD90D1E00272995 /* Exceptions for "marvelChallange" folder in "MarvelChallenge" target */ = {
+		520DF5342CD90D1E00272995 /* Exceptions for "marvelChallenge" folder in "MarvelChallenge" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
@@ -21,12 +21,12 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		520DF5212CD90D1C00272995 /* marvelChallange */ = {
+		520DF5212CD90D1C00272995 /* marvelChallenge */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				520DF5342CD90D1E00272995 /* Exceptions for "marvelChallange" folder in "MarvelChallenge" target */,
+				520DF5342CD90D1E00272995 /* Exceptions for "marvelChallenge" folder in "MarvelChallenge" target */,
 			);
-			path = marvelChallange;
+			path = marvelChallenge;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -45,7 +45,7 @@
 		520DF5162CD90D1C00272995 = {
 			isa = PBXGroup;
 			children = (
-				520DF5212CD90D1C00272995 /* marvelChallange */,
+				520DF5212CD90D1C00272995 /* marvelChallenge */,
 				520DF5202CD90D1C00272995 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -74,7 +74,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				520DF5212CD90D1C00272995 /* marvelChallange */,
+				520DF5212CD90D1C00272995 /* marvelChallenge */,
 			);
 			name = MarvelChallenge;
 			packageProductDependencies = (
@@ -146,7 +146,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = marvelChallange/Info.plist;
+				INFOPLIST_FILE = marvelChallenge/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -156,7 +156,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.weltonfs.marvelChallange;
+				PRODUCT_BUNDLE_IDENTIFIER = com.weltonfs.marvelChallenge;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -172,7 +172,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = marvelChallange/Info.plist;
+				INFOPLIST_FILE = marvelChallenge/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -182,7 +182,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.weltonfs.marvelChallange;
+				PRODUCT_BUNDLE_IDENTIFIER = com.weltonfs.marvelChallenge;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
