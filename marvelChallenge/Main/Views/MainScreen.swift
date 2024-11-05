@@ -1,10 +1,3 @@
-//
-//   MainScreen.swift
-//  marvelChallenge
-//
-//  Created by MacBook Pro on 04/11/24.
-//
-
 import UIKit
 
 protocol ViewDelegate: AnyObject {
@@ -33,6 +26,7 @@ class MainView: UIView {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(CharacterTableViewCell.self, forCellReuseIdentifier: CharacterTableViewCell.identifier)
+        tableView.allowsSelection = false
         return tableView
     }()
     
@@ -70,12 +64,15 @@ extension MainView: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: CharacterTableViewCell.identifier, for: indexPath) as? CharacterTableViewCell
-        return cell ?? UITableViewCell()
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: CharacterTableViewCell.identifier, for: indexPath) as? CharacterTableViewCell else {
+            return UITableViewCell()
+        }
+        cell.selectionStyle = .none
+        return cell
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 150
+        return 136
     }
 }
 
