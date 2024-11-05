@@ -9,8 +9,8 @@ import UIKit
 
 class ViewController: UIViewController {
     
-    private lazy var mainScreen: MainScreen = {
-        let view = MainScreen()
+    private lazy var mainScreen: MainView = {
+        let view = MainView()
         view.delegate = self
         return view
     }()

@@ -11,7 +11,7 @@ protocol ViewDelegate: AnyObject {
     func didTapButton()
 }
 
-class MainScreen: UIView {
+class MainView: UIView {
     private lazy var label: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -58,13 +58,13 @@ class MainScreen: UIView {
     }
 }
 
-extension MainScreen: UITableViewDelegate {
+extension MainView: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         debugPrint(tableView.indexPathForSelectedRow ?? 0)
     }
 }
 
-extension MainScreen: UITableViewDataSource {
+extension MainView: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 10
     }
@@ -79,7 +79,7 @@ extension MainScreen: UITableViewDataSource {
     }
 }
 
-extension MainScreen: ViewCode {
+extension MainView: ViewCode {
     func addSubviews() {
         addSubview(label)
         addSubview(button)
