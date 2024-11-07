@@ -40,11 +40,13 @@ class NetworkManager: AnyObject {
                 
                 if let error = error {
                     completion(.failure(.serverError))
+                    debugPrint("Error: \(error)")
                     return
                 }
                 
                 guard let responseData = data else {
                     completion(.failure(.emptyData))
+                    debugPrint("Error: Empty data")
                     return
                 }
                 
@@ -64,7 +66,7 @@ class NetworkManager: AnyObject {
                     
                 } catch {
                     completion(.failure(.decodeError))
-                    print("JSON decode error: \(error)")
+                    debugPrint("JSON decode error: \(error)")
                     return
                 }
             }
