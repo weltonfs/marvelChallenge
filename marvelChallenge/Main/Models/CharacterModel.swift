@@ -1,22 +1,29 @@
-//
-//  CharacterModel.swift
-//  MarvelChallenge
-//
-//  Created by MacBook Pro on 05/11/24.
-//
-
 import Foundation
 
 typealias Characters = [Character]
 
+struct CharactersData: Codable {
+    var data: Results?
+}
+struct Results: Codable {
+    var results: Characters?
+}
+
 // MARK: - Character
 
 struct Character: Codable {
-    let id: String
-    let name: String
+    let id: Int?
+    let name: String?
+    let description: String?
+    let thumbnail: Thumbnail?
+}
+
+struct Thumbnail: Codable {
+    var path: String?
+    var imageExtension: String?
     
-    enum CodingKeys: String, CodingKey {
-        case id
-        case name = "character_name"
+    public enum ThumbnailKeys: String, CodingKey{
+        case path = "path"
+        case imageExtension = "extension"
     }
 }
