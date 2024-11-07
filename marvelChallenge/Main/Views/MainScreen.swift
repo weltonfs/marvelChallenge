@@ -1,10 +1,18 @@
 import UIKit
 
-protocol ViewDelegate: AnyObject {
-    func didTapButton()
-}
-
 class MainView: UIView {
+    
+    // MARK: - Public Properties
+    
+    weak var delegate: ViewDelegate?
+    
+    // MARK: - Private Properties
+    
+    private lazy var activityIndicator: UIView = {
+        let ai = LoadingView()
+        return ai
+    }()
+    
     private lazy var label: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -19,7 +27,7 @@ class MainView: UIView {
         return button
     }()
     
-    lazy var tableView: UITableView = {
+    private lazy var tableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .plain)
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.separatorStyle = .none
@@ -30,7 +38,13 @@ class MainView: UIView {
         return tableView
     }()
     
-    weak var delegate: ViewDelegate?
+    private lazy var errorView: UIView = {
+        let view = ErrorView()
+        view.delegate = self
+        return view
+    }()
+    
+    // MARK: - Initializers
     
     init() {
         super.init(frame: .zero)
@@ -41,16 +55,35 @@ class MainView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func setup(labelText: String, buttonTitle: String) {
-        label.text = labelText
-        button.setTitle(buttonTitle, for: .normal)
-    }
+    // MARK: - Public Methods
     
+    func setup(state: StateView, characters: [Character] = []) {
+        switch state {
+        case .loading:
+            activityIndicator.isHidden = false
+            tableView.isHidden = true
+            errorView.isHidden = true
+        case .loaded:
+            activityIndicator.isHidden = true
+            if characters.isEmpty {
+                tableView.isHidden = true
+            } else {
+                tableView.isHidden = false
+            }
+        case .error:
+            activityIndicator.isHidden = true
+            tableView.isHidden = true
+            errorView.isHidden = false
+        }
+    }
+        
     @objc
-    private func didTapButton() {
+    internal func didTapButton() {
         delegate?.didTapButton()
     }
 }
+
+// MARK: - UITableViewDelegate
 
 extension MainView: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -76,15 +109,29 @@ extension MainView: UITableViewDataSource {
     }
 }
 
+// MARK: - ViewCode
+
 extension MainView: ViewCode {
     func addSubviews() {
+        addSubview(activityIndicator)
         addSubview(label)
         addSubview(button)
         addSubview(tableView)
+        addSubview(errorView)
     }
     
     func setupConstraints() {
         NSLayoutConstraint.activate([
+            activityIndicator.topAnchor.constraint(equalTo: self.topAnchor),
+            activityIndicator.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+            activityIndicator.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+            activityIndicator.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+            
+            errorView.topAnchor.constraint(equalTo: self.topAnchor),
+            errorView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+            errorView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+            errorView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+            
             label.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
             label.centerXAnchor.constraint(equalTo: centerXAnchor),
             button.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 8),
@@ -99,5 +146,12 @@ extension MainView: ViewCode {
     
     func setupStyle() {
         backgroundColor = .white
+        activityIndicator.backgroundColor = UIColor.init(red: 0.5, green: 0.5, blue: 0.5, alpha: 0.5)
+    }
+}
+
+extension MainView: ViewDelegate {
+    func didTapErrorButton() {
+        self.delegate?.didTapErrorButton()
     }
 }

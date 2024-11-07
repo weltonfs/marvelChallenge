@@ -1,0 +1,27 @@
+PODS:
+  - CryptoSwift (1.8.3)
+  - Keys (1.0.1)
+  - MarvelApiWrapper (1.0.1)
+
+DEPENDENCIES:
+  - CryptoSwift
+  - Keys (from `Pods/CocoaPodsKeys`)
+  - MarvelApiWrapper
+
+SPEC REPOS:
+  trunk:
+    - CryptoSwift
+    - MarvelApiWrapper
+
+EXTERNAL SOURCES:
+  Keys:
+    :path: Pods/CocoaPodsKeys
+
+SPEC CHECKSUMS:
+  CryptoSwift: 967f37cea5a3294d9cce358f78861652155be483
+  Keys: a576f4c9c1c641ca913a959a9c62ed3f215a8de9
+  MarvelApiWrapper: 63e7fbc56467035a9aceedeec504576ac695ee56
+
+PODFILE CHECKSUM: 8bade020607c06d95a4ecbfe91e624611e926b89
+
+COCOAPODS: 1.16.2
