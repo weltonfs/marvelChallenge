@@ -1,140 +1,97 @@
 import Foundation
+import UIKit
+import CryptoKit
 
-class Network: AnyObject {
+class NetworkManager: AnyObject {
+    
+    // MARK: - Private Properties
+    
+    private let baseUrl = "https://gateway.marvel.com/v1/public/characters"
+    private let ts = Date().timeIntervalSince1970.description
+    private let apiKey = "e61008c5e7ee9c71437234fdbc1df527"
+    private let privateKey = "8511b3bcd071a879eb7de51812d0fd8b74f70965"
+    
+    // MARK: - Public Properties
     
     enum NetworkError: Error {
         case noInternet
         case timeout
         case serverError
-        // ... other specific error cases
-    }
-        
-    func teste() -> Void{
-        // Usage
-        fetchCharacters { [weak self] result in
-            self.result = result
-            
-            switch result {
-            case .success(let data):
-                // Handle success
-                print("Data received: \(data)")
-                
-                guard let characters = try? JSONDecoder().decode(Characters.self, from: data) else {
-                    print("Decode error")
-                    return
-                }
-                print(characters)
-                
-                
-            case .failure(let error):
-                // Handle failure
-                print("Error: \(error)")
-            }
-        }
+        case emptyData
+        case statusCodeError
+        case decodeError
     }
     
-    func fetchCharacters(completion: @escaping (Result<Data, NetworkError>) -> Void) {
-        if let url = URL(string: "https://www.swapi.co/api/films") {
+    // MARK: - Public Methods
+    func fetchCharacters(completion: @escaping (Result<Characters, NetworkError>) -> Void) {
+        let hash = MD5(from: "\(ts)\(privateKey)\(apiKey)")
+        let queryItems = queryItems(dictionary: ["ts": ts,
+                                                 "apikey": apiKey,
+                                                 "hash": hash])
+        
+        if let url = URL.init(string: baseUrl + queryItems) {
+            
             var request = URLRequest(url: url)
             request.httpMethod = "GET"
             
-            // Add your headers here, for example:
-            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-            // Replace `YourAccessToken` with your actual access token for the API
-            request.setValue("Bearer YourAccessToken", forHTTPHeaderField: "Authorization")
+            let session = URLSession(configuration: .default)
             
-            // URLSession configuration
-            let config = URLSessionConfiguration.default
-            let session = URLSession(configuration: config)
-            
-            // Perform URLSession task
-            let task = session.dataTask(with: request) { (data, response, error) in
+            let dataTask = session.dataTask(with: request) { (data, response, error) in
+                
                 if let error = error {
                     completion(.failure(.serverError))
                     return
                 }
                 
                 guard let responseData = data else {
-                    completion(.failure(.serverError))
+                    completion(.failure(.emptyData))
                     return
                 }
                 
                 guard let httpResponse = response as? HTTPURLResponse,
                       (200...299).contains(httpResponse.statusCode) else {
+                    completion(.failure(.statusCodeError))
+                    return
+                }
+                
+                do {
+                    let charactersData = try JSONDecoder().decode(CharactersData.self, from: responseData)
+                    guard let characters = charactersData.data?.results else {
+                        completion(.failure(.emptyData))
+                        return
+                    }
+                    completion(.success(characters))
                     
-                    print("Erro na resposta. Código de status esperado: \(String(describing: response))")
+                } catch {
+                    completion(.failure(.decodeError))
+                    print("JSON decode error: \(error)")
                     return
                 }
-                
-                completion(.success(responseData))
             }
-            
-            task.resume()
+            dataTask.resume()
         }
     }
-    
-    func fetchData2(completionHandler: @escaping ([Characters]) -> Void) {
-        if let url = URL(string: "https://www.swapi.co/api/films/") {
-            
-            let task = URLSession.shared.dataTask(with: url, completionHandler: { (data, response, error) in
-                if let error = error {
-                    print("Erro ao obter os filmes: \(error)")
-                    return
-                }
-                
-                guard let httpResponse = response as? HTTPURLResponse,
-                      (200...299).contains(httpResponse.statusCode) else {
-                    print("Erro na resposta. Código de status esperado: \(String(describing: response))")
-                    return
-                }
-            })
-            task.resume()
-        }
-    }
-    
 }
 
-
-
-
-
-//func teste() -> Void{
-//    // Usage
-//    fetchData { [weak self] result in
-//        switch result {
-//        case .success(let data):
-//            // Handle success
-//            print("Data received: \(data)")
-//        case .failure(let error):
-//            // Handle failure
-//            print("Error: \(error)")
-//        }
-//    }
-//}
-//
-//
-//func fetchData(completion: @escaping (Result<Data, NetworkError>) -> Void) {
-//    guard hasInternetConnection() else {
-//        completion(.failure(.noInternet))
-//        return
-//    }
-//
-//    // Perform URLSession task
-//    let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
-//        if let error = error {
-//            completion(.failure(.serverError))
-//            return
-//        }
-//
-//        guard let responseData = data else {
-//            completion(.failure(.serverError))
-//            return
-//        }
-//
-//        completion(.success(responseData))
-//    }
-//
-//    task.resume()
-//}
+private extension NetworkManager {
+    
+    // MARK: - Private Methods
+    
+    func MD5(from string: String) -> String {
+        let digest = Insecure.MD5.hash(data: Data(string.utf8))
+        
+        return digest.map {
+            String(format: "%02hhx", $0)
+        }.joined()
+    }
+    
+    func queryItems(dictionary: [String:Any]) -> String {
+        var components = URLComponents()
+        components.queryItems = dictionary.map {
+            URLQueryItem(name: $0, value: $1  as? String)
+        }
+        return (components.url?.absoluteString)!
+    }
+}
 
 
