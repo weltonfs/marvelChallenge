@@ -3,12 +3,12 @@ import UIKit
 
 class ErrorView: UIView {
     
-    weak var delegate: ViewDelegate?
+    weak var delegate: MainViewDelegate?
     
     private lazy var label: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Erro"
+        label.text = "Ops!"
         return label
     }()
     

@@ -1,10 +1,18 @@
 import UIKit
+import Foundation
 
 class CharacterTableViewCell: UITableViewCell {
     
-    static let identifier = "CharacterTableViewCell"
+    // MARK: - Public Properties
     
-    let cellView: UIView = {
+    static let identifier = "CharacterTableViewCell"
+    weak var delegate: MainViewDelegate?
+    
+    // MARK: - Private Properties
+    
+    private var character: Character?
+    
+    private let cellView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
@@ -33,6 +41,8 @@ class CharacterTableViewCell: UITableViewCell {
         return imageView
     }()
     
+    // MARK: - Initializers
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setup()
@@ -41,7 +51,17 @@ class CharacterTableViewCell: UITableViewCell {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    // MARK: - Public Methods
+    
+    func setup(character: Character) {
+        self.character = character
+        name.text = character.name
+        thumbnail.downloadThumbnail(thumbnail: character.thumbnail)
+    }
 }
+
+// MARK: - Setup ViewCode
 
 extension CharacterTableViewCell: ViewCode {
     func addSubviews() {
@@ -85,5 +105,15 @@ extension CharacterTableViewCell: ViewCode {
         thumbnail.layer.borderColor = UIColor.lightGray.cgColor
         thumbnail.layer.cornerRadius = 5
         thumbnail.layer.masksToBounds = true
+        
+        let recognizer = UITapGestureRecognizer(target: self, action: #selector(didTapCell))
+        self.addGestureRecognizer(recognizer)
+    }
+    
+    @objc
+    func didTapCell() {
+        if let character = self.character {
+            delegate?.didSelectCell(item: character)
+        }
     }
 }

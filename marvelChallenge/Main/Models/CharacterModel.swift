@@ -5,6 +5,7 @@ typealias Characters = [Character]
 struct CharactersData: Codable {
     var data: Results?
 }
+
 struct Results: Codable {
     var results: Characters?
 }
@@ -22,8 +23,7 @@ struct Thumbnail: Codable {
     var path: String?
     var imageExtension: String?
     
-    public enum ThumbnailKeys: String, CodingKey{
-        case path = "path"
-        case imageExtension = "extension"
+    public enum CodingKeys: String, CodingKey{
+        case path, imageExtension = "extension"
     }
 }

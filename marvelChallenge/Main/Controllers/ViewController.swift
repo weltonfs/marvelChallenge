@@ -6,8 +6,8 @@ enum StateView: Error {
     case error
 }
 
-protocol ViewDelegate: AnyObject {
-    func didTapButton()
+protocol MainViewDelegate: AnyObject {
+    func didSelectCell(item: Character)
     func didTapErrorButton()
 }
 
@@ -15,13 +15,13 @@ class ViewController: UIViewController {
     
     // MARK: - Private Properties
     
+    private var characters: [Character]?
+    
     private lazy var mainScreen: MainView = {
         let view = MainView()
         view.delegate = self
         return view
     }()
-    
-    private var characters: [Character]?
     
     // MARK: - Initiators
     
@@ -34,7 +34,8 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = "Marvel Challenge"
-        loadingMainScreen()
+        
+        loadingMainScreen(with: .loading)
         getCharacters()
     }
 }
@@ -42,7 +43,7 @@ class ViewController: UIViewController {
 // MARK: - Private Methods
 
 private extension ViewController {
-
+    
     func loadingMainScreen(with state: StateView = .loading) {
         DispatchQueue.main.async { [self] in
             mainScreen.setup(state: state, characters: self.characters ?? [])
@@ -65,15 +66,16 @@ private extension ViewController {
 
 // MARK: - ViewDelegate
 
-extension ViewController: ViewDelegate {
-    func didTapButton() {
-        debugPrint("Delegate ok")
+extension ViewController: MainViewDelegate {
+    func didSelectCell(item: Character) {
+        debugPrint(item)
+        
+//        TODO: call detail screen
     }
     
     func didTapErrorButton() {
-        debugPrint("Error Delegate ok")
-        
         loadingMainScreen()
         getCharacters()
     }
 }
+

@@ -4,9 +4,12 @@ class MainView: UIView {
     
     // MARK: - Public Properties
     
-    weak var delegate: ViewDelegate?
+    weak var delegate: MainViewDelegate?
     
     // MARK: - Private Properties
+    
+    private var characters: [Character] = []
+    private var selectedCharacter: Character?
     
     private lazy var activityIndicator: UIView = {
         let ai = LoadingView()
@@ -16,15 +19,8 @@ class MainView: UIView {
     private lazy var label: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "Add search bar"
         return label
-    }()
-    
-    private lazy var button: UIButton = {
-        let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitleColor(.blue, for: .normal)
-        button.addTarget(self, action: #selector(didTapButton), for: .touchUpInside)
-        return button
     }()
     
     private lazy var tableView: UITableView = {
@@ -69,6 +65,10 @@ class MainView: UIView {
                 tableView.isHidden = true
             } else {
                 tableView.isHidden = false
+                self.characters = characters
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                }
             }
         case .error:
             activityIndicator.isHidden = true
@@ -76,24 +76,25 @@ class MainView: UIView {
             errorView.isHidden = false
         }
     }
-        
-    @objc
-    internal func didTapButton() {
-        delegate?.didTapButton()
-    }
+    
+//    @objc
+//    internal func didTapCell() {
+//        if selectedCharacter != nil {
+//            delegate?.didTapButton()
+//        }
+//    }
 }
 
-// MARK: - UITableViewDelegate
+// MARK: - UITableViewDelegate, UITableViewDataSource
 
-extension MainView: UITableViewDelegate {
+extension MainView: UITableViewDataSource, UITableViewDelegate {
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         debugPrint(tableView.indexPathForSelectedRow ?? 0)
     }
-}
-
-extension MainView: UITableViewDataSource {
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 10
+        return self.characters.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -101,6 +102,8 @@ extension MainView: UITableViewDataSource {
             return UITableViewCell()
         }
         cell.selectionStyle = .none
+        cell.setup(character: self.characters[indexPath.row])
+        cell.delegate = self
         return cell
     }
     
@@ -115,7 +118,6 @@ extension MainView: ViewCode {
     func addSubviews() {
         addSubview(activityIndicator)
         addSubview(label)
-        addSubview(button)
         addSubview(tableView)
         addSubview(errorView)
     }
@@ -134,10 +136,8 @@ extension MainView: ViewCode {
             
             label.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
             label.centerXAnchor.constraint(equalTo: centerXAnchor),
-            button.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 8),
-            button.centerXAnchor.constraint(equalTo: centerXAnchor),
             
-            tableView.topAnchor.constraint(equalTo: button.bottomAnchor),
+            tableView.topAnchor.constraint(equalTo: label.bottomAnchor),
             tableView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
             tableView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor)
@@ -150,7 +150,12 @@ extension MainView: ViewCode {
     }
 }
 
-extension MainView: ViewDelegate {
+extension MainView: MainViewDelegate {
+    func didSelectCell(item: Character) {
+        self.delegate?.didSelectCell(item: item)
+    }
+    
+    
     func didTapErrorButton() {
         self.delegate?.didTapErrorButton()
     }
