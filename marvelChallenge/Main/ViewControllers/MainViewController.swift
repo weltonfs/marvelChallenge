@@ -11,7 +11,7 @@ protocol MainViewDelegate: AnyObject {
     func didTapErrorButton()
 }
 
-class ViewController: UIViewController {
+class MainViewController: UIViewController {
     
     // MARK: - Private Properties
     
@@ -42,7 +42,7 @@ class ViewController: UIViewController {
 
 // MARK: - Private Methods
 
-private extension ViewController {
+private extension MainViewController {
     
     func loadingMainScreen(with state: StateView = .loading) {
         DispatchQueue.main.async { [self] in
@@ -66,7 +66,7 @@ private extension ViewController {
 
 // MARK: - ViewDelegate
 
-extension ViewController: MainViewDelegate {
+extension MainViewController: MainViewDelegate {
     func didSelectCell(item: Character) {
         debugPrint(item)
         
