@@ -4,40 +4,44 @@ class DetailView: UIView {
     
     // MARK: - Public Properties
     
-    weak var delegate: MainViewDelegate?
-    
     // MARK: - Private Properties
     
-    private var characters: [Character] = []
-    private var selectedCharacter: Character?
+    private lazy var scrollView: UIScrollView = {
+        let scrollView = UIScrollView()
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.showsHorizontalScrollIndicator = false
+        return scrollView
+    }()
     
-    private lazy var activityIndicator: UIView = {
-        let ai = LoadingView()
-        return ai
+    private lazy var container: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    private lazy var image: UIImageView = {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(named: "noimage.png")
+        return imageView
     }()
     
     private lazy var label: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Add search bar"
+        label.font = UIFont.boldSystemFont(ofSize: 22)
         return label
     }()
     
-    private lazy var tableView: UITableView = {
-        let tableView = UITableView(frame: .zero, style: .plain)
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.separatorStyle = .none
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.register(CharacterTableViewCell.self, forCellReuseIdentifier: CharacterTableViewCell.identifier)
-        tableView.allowsSelection = false
-        return tableView
-    }()
-    
-    private lazy var errorView: UIView = {
-        let view = ErrorView()
-        view.delegate = self
-        return view
+    private lazy var textView: UITextView = {
+        let textView = UITextView(frame: .zero)
+        textView.translatesAutoresizingMaskIntoConstraints = false
+        textView.font = UIFont.systemFont(ofSize: 18)
+        textView.isEditable = false
+        textView.isSelectable = false
+        textView.isScrollEnabled = false
+        textView.text = "* No description"
+        return textView
     }()
     
     // MARK: - Initializers
@@ -53,110 +57,74 @@ class DetailView: UIView {
     
     // MARK: - Public Methods
     
-    func setup(state: StateView, characters: [Character] = []) {
-        switch state {
-        case .loading:
-            activityIndicator.isHidden = false
-            tableView.isHidden = true
-            errorView.isHidden = true
-        case .loaded:
-            activityIndicator.isHidden = true
-            if characters.isEmpty {
-                tableView.isHidden = true
+    func setup(character: Character) {
+        DispatchQueue.main.async { [self] in
+            
+            if character.name == "" {
+                label.text = "* No name"
             } else {
-                tableView.isHidden = false
-                self.characters = characters
-                DispatchQueue.main.async {
-                    self.tableView.reloadData()
-                }
+                label.text = character.name
             }
-        case .error:
-            activityIndicator.isHidden = true
-            tableView.isHidden = true
-            errorView.isHidden = false
+            
+            if character.description == "" {
+                textView.text = "* No description"
+            } else {
+                textView.text = character.description
+            }
+            
+            image.downloadThumbnail(thumbnail: character.thumbnail)
         }
-    }
-    
-//    @objc
-//    internal func didTapCell() {
-//        if selectedCharacter != nil {
-//            delegate?.didTapButton()
-//        }
-//    }
-}
-
-// MARK: - UITableViewDelegate, UITableViewDataSource
-
-extension MainView: UITableViewDataSource, UITableViewDelegate {
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        debugPrint(tableView.indexPathForSelectedRow ?? 0)
-    }
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.characters.count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: CharacterTableViewCell.identifier, for: indexPath) as? CharacterTableViewCell else {
-            return UITableViewCell()
-        }
-        cell.selectionStyle = .none
-        cell.setup(character: self.characters[indexPath.row])
-        cell.delegate = self
-        return cell
-    }
-    
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 136
     }
 }
 
 // MARK: - ViewCode
 
-extension MainView: ViewCode {
+extension DetailView: ViewCode {
     func addSubviews() {
-        addSubview(activityIndicator)
-        addSubview(label)
-        addSubview(tableView)
-        addSubview(errorView)
+        addSubview(scrollView)
+        scrollView.addSubview(container)
+        container.addSubview(image)
+        container.addSubview(label)
+        container.addSubview(textView)
     }
     
     func setupConstraints() {
+        let size = UIScreen.main.bounds
+        
         NSLayoutConstraint.activate([
-            activityIndicator.topAnchor.constraint(equalTo: self.topAnchor),
-            activityIndicator.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-            activityIndicator.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-            activityIndicator.bottomAnchor.constraint(equalTo: self.bottomAnchor),
             
-            errorView.topAnchor.constraint(equalTo: self.topAnchor),
-            errorView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-            errorView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-            errorView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+            scrollView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
+
+            container.topAnchor.constraint(equalTo: scrollView.topAnchor),
+            container.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+            container.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+            container.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
             
-            label.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
-            label.centerXAnchor.constraint(equalTo: centerXAnchor),
+            image.heightAnchor.constraint(equalToConstant: size.width-16),
+            image.widthAnchor.constraint(equalToConstant: size.width-16),
+            image.topAnchor.constraint(equalTo: container.topAnchor),
+            image.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: 8),
+            image.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -8),
             
-            tableView.topAnchor.constraint(equalTo: label.bottomAnchor),
-            tableView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-            tableView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor)
+            label.topAnchor.constraint(equalTo: image.bottomAnchor, constant: 8),
+            label.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: 8),
+            label.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -8),
+
+            textView.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 8),
+            textView.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: 8),
+            textView.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -8),
+            textView.bottomAnchor.constraint(equalTo: container.bottomAnchor, constant: -8),
         ])
     }
     
-    func setupStyle() {
-        backgroundColor = .white
-        activityIndicator.backgroundColor = UIColor.init(red: 0.5, green: 0.5, blue: 0.5, alpha: 0.5)
-    }
-}
+    func setupStyle() {        
+        self.backgroundColor = .white
+        label.backgroundColor = .systemGray6
 
-extension MainView: MainViewDelegate {
-    func didSelectCell(item: Character) {
-        self.delegate?.didSelectCell(item: item)
-    }
-    
-    
-    func didTapErrorButton() {
-        self.delegate?.didTapErrorButton()
+        image.layer.setBorder()
+        label.layer.setBorder()
     }
 }

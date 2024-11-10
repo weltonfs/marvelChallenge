@@ -1,4 +1,3 @@
-
 import UIKit
 
 class LoadingView: UIView {
@@ -34,5 +33,6 @@ extension LoadingView: ViewCode {
     
     func setupStyle() {
         translatesAutoresizingMaskIntoConstraints = false
+        backgroundColor = .white
     }
 }

@@ -150,6 +150,8 @@ extension MainView: ViewCode {
     }
 }
 
+// MARK: - MainViewDelegate
+
 extension MainView: MainViewDelegate {
     func didSelectCell(item: Character) {
         self.delegate?.didSelectCell(item: item)

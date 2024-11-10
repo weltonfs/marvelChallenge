@@ -67,10 +67,10 @@ private extension MainViewController {
 // MARK: - ViewDelegate
 
 extension MainViewController: MainViewDelegate {
-    func didSelectCell(item: Character) {
-        debugPrint(item)
-        
-//        TODO: call detail screen
+    func didSelectCell(item: Character) {        
+        let detailViewController = DetailViewController()
+        detailViewController.setup(character: item)
+        navigationController?.pushViewController(detailViewController, animated: true)
     }
     
     func didTapErrorButton() {
