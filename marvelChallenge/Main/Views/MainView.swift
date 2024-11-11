@@ -15,14 +15,7 @@ class MainView: UIView {
         let ai = LoadingView()
         return ai
     }()
-    
-    private lazy var label: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Add search bar"
-        return label
-    }()
-    
+        
     private lazy var tableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .plain)
         tableView.translatesAutoresizingMaskIntoConstraints = false
@@ -117,7 +110,6 @@ extension MainView: UITableViewDataSource, UITableViewDelegate {
 extension MainView: ViewCode {
     func addSubviews() {
         addSubview(activityIndicator)
-        addSubview(label)
         addSubview(tableView)
         addSubview(errorView)
     }
@@ -134,10 +126,7 @@ extension MainView: ViewCode {
             errorView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
             errorView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
             
-            label.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
-            label.centerXAnchor.constraint(equalTo: centerXAnchor),
-            
-            tableView.topAnchor.constraint(equalTo: label.bottomAnchor),
+            tableView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
             tableView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
             tableView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor)
