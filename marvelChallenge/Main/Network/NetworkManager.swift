@@ -24,60 +24,60 @@ class NetworkManager: AnyObject {
     
     // MARK: - Public Methods
     func fetchCharacters(completion: @escaping (Result<Characters, NetworkError>) -> Void) {
-        let hash = MD5(from: "\(ts)\(privateKey)\(apiKey)")
-        let queryItems = queryItems(dictionary: ["ts": ts,
-                                                 "apikey": apiKey,
-                                                 "hash": hash])
         
-        if let url = URL.init(string: baseUrl + queryItems) {
-            
-            var request = URLRequest(url: url)
-            request.httpMethod = "GET"
-            
-            let session = URLSession(configuration: .default)
-            
-            let dataTask = session.dataTask(with: request) { (data, response, error) in
-                
-                if let error = error {
-                    completion(.failure(.serverError))
-                    debugPrint("Error: \(error)")
-                    return
-                }
-                
-                guard let responseData = data else {
-                    completion(.failure(.emptyData))
-                    debugPrint("Error: Empty data")
-                    return
-                }
-                
-                guard let httpResponse = response as? HTTPURLResponse,
-                      (200...299).contains(httpResponse.statusCode) else {
-                    completion(.failure(.statusCodeError))
-                    return
-                }
-                
-                do {
-                    let charactersData = try JSONDecoder().decode(CharactersData.self, from: responseData)
-                    guard let characters = charactersData.data?.results else {
-                        completion(.failure(.emptyData))
-                        return
-                    }
-                    completion(.success(characters))
-                    
-                } catch {
-                    completion(.failure(.decodeError))
-                    debugPrint("JSON decode error: \(error)")
-                    return
-                }
-            }
-            dataTask.resume()
+        guard let url = URL.init(string: getUrl()) else {
+            return
         }
+        
+        let session = URLSession(configuration: .default)
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        
+        let dataTask = session.dataTask(with: request) { (data, response, error) in
+            
+            if error != nil {
+                completion(.failure(.serverError))
+                return
+            }
+            
+            guard let httpResponse = response as? HTTPURLResponse,
+                  (200...299).contains(httpResponse.statusCode) else {
+                completion(.failure(.statusCodeError))
+                return
+            }
+            
+            guard let responseData = data else {
+                completion(.failure(.emptyData))
+                return
+            }
+            
+            do {
+                let charactersData = try JSONDecoder().decode(CharactersData.self, from: responseData)
+                guard let characters = charactersData.data?.results else {
+                    completion(.failure(.emptyData))
+                    return
+                }
+                completion(.success(characters))
+            } catch {
+                completion(.failure(.decodeError))
+                return
+            }
+        }
+        dataTask.resume()
     }
 }
 
 private extension NetworkManager {
     
     // MARK: - Private Methods
+    
+    func getUrl() -> String {
+        let hash = MD5(from: ts + privateKey + apiKey)
+        let queryItems = queryItems(dictionary: ["ts": ts,
+                                                 "apikey": apiKey,
+                                                 "hash": hash])
+        return baseUrl + queryItems
+    }
     
     func MD5(from string: String) -> String {
         let digest = Insecure.MD5.hash(data: Data(string.utf8))
