@@ -6,21 +6,25 @@ enum StateView: Error {
     case error
 }
 
+// MARK: - MainViewDelegate
+
 protocol MainViewDelegate: AnyObject {
     func didSelectCell(item: Character)
     func didTapErrorButton()
 }
 
+// MARK: - Class MainViewController
+
 class MainViewController: UIViewController {
-    
-    let searchController = UISearchController()
     
     // MARK: - Private Properties
     
+    private let searchController = UISearchController()
+    
+    private var viewModel: MainViewModelProtocol
     private var characters: [Character]?
     private var filteredCharacters: [Character] = []
-    private var userDefaults = UserDefaults.standard
-        
+    
     private lazy var mainScreen: MainView = {
         let view = MainView()
         view.delegate = self
@@ -37,11 +41,19 @@ class MainViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationItem.title = "Marvel Challenge"
-        searchController.searchResultsUpdater = self
-        navigationItem.searchController = searchController
         
-        fetchCharacters()
+        setupNavigationBar()
+        setupBind()
+        viewModel.getCharacters()
+    }
+    
+    init() {
+        viewModel = MainViewModel()
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 }
 
@@ -49,18 +61,24 @@ class MainViewController: UIViewController {
 
 private extension MainViewController {
     
-    func fetchCharacters() {
-        loadMainScreen(state: .loading)
+    func setupNavigationBar() {
+        navigationItem.title = "Marvel Challenge"
+        searchController.searchResultsUpdater = self
+        navigationItem.searchController = searchController
+    }
+    
+    func setupBind() {
+        viewModel.showLoading = { [weak self] in
+            self?.loadMainScreen(state: .loading)
+        }
         
-        NetworkManager().fetchCharacters { [weak self] result in
-            switch result {
-            case .success(let characters):
-                self?.characters = characters
-                self?.loadMainScreen(state: .loaded, characters: characters)
-            case .failure(let error):
-                print("fetchCharacters - Error : \(error)")
-                self?.loadMainScreen(state: .error)
-            }
+        viewModel.showMainView = { [weak self] characters in
+            self?.characters = characters
+            self?.loadMainScreen(state: .loaded, characters: characters)
+        }
+        
+        viewModel.showErrorView = { [weak self] state in
+            self?.loadMainScreen(state: .error)
         }
     }
     
@@ -71,27 +89,24 @@ private extension MainViewController {
     }
     
     func filterCharacter(with text: String) {
+    
         filteredCharacters.removeAll()
+        
         if let characters = self.characters {
             if text.isEmpty {
                 filteredCharacters = characters
-                self.loadMainScreen(state: .loaded, characters: characters)
+                self.loadMainScreen(state: StateView.loaded, characters: characters)
                 return
             }
             
-            filteredCharacters = characters.filter {
-                if let name = $0.name {
-                    return name.lowercased().contains(text.lowercased())
-                }
-                return false
-            }
+            filteredCharacters = viewModel.filter(characters: characters, with: text)
             
-            self.loadMainScreen(state: .loaded, characters: filteredCharacters)
+            self.loadMainScreen(state: StateView.loaded, characters: filteredCharacters)
         }
     }
 }
 
-// MARK: - ViewDelegate
+// MARK: - MainView Delegate
 
 extension MainViewController: MainViewDelegate {
     
@@ -102,7 +117,7 @@ extension MainViewController: MainViewDelegate {
     }
     
     func didTapErrorButton() {
-        fetchCharacters()
+        viewModel.getCharacters()
     }
 }
 
