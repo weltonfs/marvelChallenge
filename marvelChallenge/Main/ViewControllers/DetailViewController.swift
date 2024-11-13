@@ -30,8 +30,8 @@ class DetailViewController: UIViewController {
             navigationItem.title = "Marvel Challenge"
         }
         
-        // TODO: change custom icon
-        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .camera,
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "star.square.fill"),
+                                                            style: .plain,
                                                             target: self,
                                                             action: #selector(self.favoriteCharacter))
     }

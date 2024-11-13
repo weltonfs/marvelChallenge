@@ -21,7 +21,7 @@ class CharacterTableViewCell: UITableViewCell {
     private lazy var name: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Spider"
+        label.text = "* No name"
         return label
     }()
     
@@ -35,7 +35,7 @@ class CharacterTableViewCell: UITableViewCell {
     private lazy var favorite: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(systemName: "star.circle.fill")
+        imageView.image = UIImage(systemName: "star.square")
         imageView.tintColor = .systemYellow
         imageView.contentMode = .scaleAspectFit
         return imageView
