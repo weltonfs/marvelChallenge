@@ -7,7 +7,9 @@ class MainView: UIView {
     weak var delegate: MainViewDelegate?
     
     // MARK: - Private Properties
-    
+
+    private let refreshControl = UIRefreshControl()
+
     private var characters: [Character] = []
     private var selectedCharacter: Character?
     
@@ -24,6 +26,7 @@ class MainView: UIView {
         tableView.dataSource = self
         tableView.register(CharacterTableViewCell.self, forCellReuseIdentifier: CharacterTableViewCell.identifier)
         tableView.allowsSelection = false
+        tableView.refreshControl = refreshControl
         return tableView
     }()
     
@@ -103,6 +106,11 @@ extension MainView: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 136
     }
+    
+    @objc private func refreshWeatherData(_ sender: Any) {
+        tableView.reloadData()
+        self.refreshControl.endRefreshing()
+    }
 }
 
 // MARK: - ViewCode
@@ -136,6 +144,7 @@ extension MainView: ViewCode {
     func setupStyle() {
         backgroundColor = .white
         activityIndicator.backgroundColor = UIColor.init(red: 0.5, green: 0.5, blue: 0.5, alpha: 0.5)
+        refreshControl.addTarget(self, action: #selector(refreshWeatherData(_:)), for: .valueChanged)
     }
 }
 

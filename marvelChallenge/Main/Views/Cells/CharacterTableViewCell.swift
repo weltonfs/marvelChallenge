@@ -35,9 +35,10 @@ class CharacterTableViewCell: UITableViewCell {
     private lazy var favorite: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(systemName: "star.square")
+        imageView.image = UIImage(systemName: "star.square.fill")
         imageView.tintColor = .systemYellow
         imageView.contentMode = .scaleAspectFit
+        imageView.isHidden = true
         return imageView
     }()
     
@@ -58,6 +59,14 @@ class CharacterTableViewCell: UITableViewCell {
         self.character = character
         name.text = character.name
         thumbnail.downloadThumbnail(thumbnail: character.thumbnail)
+        setFavoriteImage(characterId: character.id)
+    }
+    
+    func setFavoriteImage(characterId: Int?) {
+        if let id = characterId {
+            let isFavorite = UserDefaultsManager.shared.isFavorite(id: id)
+            favorite.isHidden = !isFavorite
+        }
     }
 }
 

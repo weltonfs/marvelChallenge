@@ -57,21 +57,10 @@ class DetailView: UIView {
     
     // MARK: - Public Methods
     
-    func setup(character: Character) {
+    func setup(with character: Character) {
         DispatchQueue.main.async { [self] in
-            
-            if character.name == "" {
-                label.text = "* No name"
-            } else {
-                label.text = character.name
-            }
-            
-            if character.description == "" {
-                textView.text = "* No description"
-            } else {
-                textView.text = character.description
-            }
-            
+            label.text = character.name != "" ? character.name : "* No name"
+            textView.text = character.description != "" ? character.description : "* No description"
             image.downloadThumbnail(thumbnail: character.thumbnail)
         }
     }
